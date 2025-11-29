@@ -6,6 +6,7 @@ import { GroupExpandedView } from "@/components/group/group-expanded-view";
 import { useGroupsContext } from "@/components/dashboard/groups-provider";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Group } from "@/lib/api";
 
 export default function GroupSettingsPage() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function GroupSettingsPage() {
   );
 
   // Find group from context
-  const group = groups.find((g) => g.id === id);
+  const group = groups.find((g: Group) => g.id === id);
 
   if (groupsLoading && !group) {
     return (

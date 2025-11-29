@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { GroupExpandedView } from "@/components/group/group-expanded-view";
-import { fetchGroup } from "@/lib/api";
+import { Group } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@clerk/nextjs";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -17,7 +17,7 @@ export default function InterceptedGroupPage() {
   // 🔒 Safe param parsing
   const id = rawId ? Number(rawId) : null;
 
-  const { groups, loading: groupsLoading } = useGroupsContext();
+  const { groups, loading: groupsLoading, refreshGroups } = useGroupsContext();
   const { getToken } = useAuth();
 
   // STATE
@@ -97,6 +97,7 @@ export default function InterceptedGroupPage() {
       token={token}
       onExpenseUpdate={() => { }} // Context updates happen via other means or we can trigger refetch
       ownerId={groupFromContext.owner_id}
+      refreshData={refreshGroups}
     />
   );
 }

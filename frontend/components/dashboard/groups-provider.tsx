@@ -12,6 +12,7 @@ interface GroupsContextType {
     error: string | null;
     isLoaded: boolean;
     user: UserResource | null | undefined;
+    refreshGroups: () => Promise<void>;
 }
 
 const GroupsContext = createContext<GroupsContextType | undefined>(undefined);

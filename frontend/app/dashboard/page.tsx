@@ -16,6 +16,7 @@ import { useWelcomeScreen } from "@/hooks/use-welcome-screen";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { useGroupsContext } from "@/components/dashboard/groups-provider";
+import { Group } from "@/lib/api";
 import Link from "next/link";
 
 function DashboardContent() {
@@ -42,7 +43,7 @@ function DashboardContent() {
   }, [getToken]);
 
   const { createNewGroup } = useCreateGroup((newGroup) => {
-    setGroups((prevGroups) => [...prevGroups, newGroup]);
+    setGroups((prevGroups: Group[]) => [...prevGroups, newGroup]);
   });
 
   useEffect(() => {
@@ -123,7 +124,7 @@ function DashboardContent() {
     }
   };
 
-  const filteredGroups = groups.filter((group) =>
+  const filteredGroups = groups.filter((group: Group) =>
     group.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

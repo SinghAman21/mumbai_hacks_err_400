@@ -11,17 +11,18 @@ import { GroupsHeader } from "@/components/dashboard/groups-header";
 import { CreateGroupDialog } from "@/components/dashboard/create-group-dialog";
 import { GroupActionStatus } from "@/components/group/group-action-status";
 import { GroupExpandedView } from "@/components/group/group-expanded-view";
-import { useGroupsData } from "@/hooks/use-groups-data";
 import { useCreateGroup } from "@/hooks/use-create-group";
 import { useWelcomeScreen } from "@/hooks/use-welcome-screen";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { useGroupsContext } from "@/components/dashboard/groups-provider";
+import Link from "next/link";
 
 function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { getToken } = useAuth();
-  const { groups, setGroups, loading, error, isLoaded, user } = useGroupsData();
+  const { groups, setGroups, loading, error, isLoaded, user } = useGroupsContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { showWelcome, isFirstTime, setShowWelcome } = useWelcomeScreen({
@@ -34,9 +35,6 @@ function DashboardContent() {
     message: string;
   } | null>(null);
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"transactions" | "members">(
-    "transactions"
-  );
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -158,48 +156,27 @@ function DashboardContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {loading
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <CardSkeleton key={`skeleton-${index}`} />
-                  ))
+                  <CardSkeleton key={`skeleton-${index}`} />
+                ))
                 : filteredGroups.map((group) => (
+                  <Link
+                    key={group.id}
+                    href={`/dashboard/group/${group.id}`}
+                    className="block"
+                  >
                     <GroupCard
-                      key={group.id}
                       {...group}
                       id={group.id.toString()}
-                      onClick={() => setSelectedGroupId(group.id.toString())}
+                      onClick={() => { }}
                     />
-                  ))}
+                  </Link>
+                ))}
             </div>
           </div>
         )}
       </main>
 
-      {selectedGroupId && (
-        <GroupExpandedView
-          id={selectedGroupId}
-          name={
-            groups.find((g) => g.id.toString() === selectedGroupId)?.name || ""
-          }
-          memberCount={
-            groups.find((g) => g.id.toString() === selectedGroupId)
-              ?.memberCount || 0
-          }
-          lastActivity={
-            groups.find((g) => g.id.toString() === selectedGroupId)
-              ?.lastActivity || ""
-          }
-          active={true}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          onClose={() => setSelectedGroupId(null)}
-          animateInitial={true}
-          token={token}
-          onExpenseUpdate={() => {}}
-          ownerId={
-            groups.find((g) => g.id.toString() === selectedGroupId)?.owner_id ||
-            null
-          }
-        />
-      )}
+
 
       <CreateGroupDialog
         open={isDialogOpen}

@@ -157,6 +157,9 @@ export interface Expense {
     id: number;
   };
   created_at: string;
+  status: string;
+  dispute_reason?: string;
+  user_approval_status?: string;
 }
 
 export interface GroupLog {
